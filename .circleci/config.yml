@@ -28,7 +28,7 @@ jobs:
       - restore_cache:
           keys: "npm-package"
       - run: npm i
-      - run: npm audit
+      - run: npm audit fix
 workflows:
   npm_workflow:
     jobs: 
