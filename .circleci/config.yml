@@ -5,10 +5,35 @@ jobs:
       - image: cimg/node:18.4.0
     steps:
       - checkout
-      - run: node --version
-  # - test:
-  # - analyze:
+      - run: npm i
+      - save_cache: 
+          key: "npm-package"
+          paths:
+            - /src/node_modules
+      - run: npm run lint
+   - test:
+      docker:
+        - image: cimg/node:18.4.
+      steps:
+        - checkout
+        - restore_cache:
+            keys: "npm-package"
+        - run: npm i
+        - run: npm run test
+   - analyze:
+      docker:
+        - image: cimg/node:18.4.
+      steps:
+        - checkout
+        - restore_cache:
+            keys: "npm-package"
+        - run: npm i
+        - run: npm audit
 workflows:
   npm_workflow:
     jobs: 
       - build
+      - test:
+          requires: [build]
+      - analyze:
+          requires: [test]
